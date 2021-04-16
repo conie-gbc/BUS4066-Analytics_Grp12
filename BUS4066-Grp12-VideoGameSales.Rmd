@@ -112,16 +112,28 @@ VideoGameDataDuplicate %>% distinct()
 ##result hidden due to number of rows
 ```
 
+\newpage
 ## ______________________________________________
 ## Reorder multiple rows in descending order
 ```{r}
-
+VideoGamedata %>% arrange(desc(Genre, Publisher))
 ```
+
+\newpage
 ## ______________________________________________
 ## Rename column names in dataset
 ```{r}
-
+VideoGamedata %>% 
+  rename(
+    NorthAmerica_Sales = NA_Sales,
+    Europe_Sales = EU_Sales,
+    Japan_Sales = JP_Sales,
+    Other_Sales = Other_Sales,
+    Global_Sales = Global_Sales
+    )
 ```
+
+\newpage
 ## ______________________________________________
 ## Add new variables in data frame by using a mathematical function
 ```{r}
