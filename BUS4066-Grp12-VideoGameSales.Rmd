@@ -1,0 +1,297 @@
+---
+title: "BUS4066 - Group 12 - Video Game Sales"
+output: pdf_document
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead[CO,CE]{Group12-AssignmentR}
+- \fancyfoot[CO,CE]{$https://github.com/conie-gbc/BUS4066-Analytics_Grp12$}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+library(ggpubr)
+library(tidyverse)
+library(janitor) # janitor helps us clean datasets
+library(here) # here helps us to know where files are
+library(readxl)
+library(dplyr)
+```
+
+## ______________________________________________
+## Introduction
+## This dataset contains a list of video games with sales greater than 100,000 copies.
+## Fields include:
+## Rank - Ranking of overall sales
+## Name - The games name
+## Platform - Platform of the games release (i.e. PC,PS4, etc.)
+## Year - Year of the game's release
+## Genre - Genre of the game
+## Publisher - Publisher of the game
+## NA_Sales - Sales in North America (in millions)
+## EU_Sales - Sales in Europe (in millions)
+## JP_Sales - Sales in Japan (in millions)
+## Other_Sales - Sales in the rest of the world (in millions)
+## Global_Sales - Total worldwide sales.
+## 
+## Group repository - https://github.com/conie-gbc/BUS4066-Analytics_Grp12
+
+
+## ______________________________________________
+## Load data - vgsales.csv from https://www.kaggle.com/gregorut/videogamesales
+```{r VideoGameSales}
+VideoGamedata <- readr::read_csv(file ="vgsales.csv")
+```
+
+\newpage
+## ______________________________________________
+## Structure of dataset
+```{r}
+str(VideoGamedata)
+```
+
+## ______________________________________________
+## List the variables in dataset
+```{r}
+names(VideoGamedata)
+```
+
+\newpage
+## ______________________________________________
+## Top 15 rows of dataset
+```{r}
+head (VideoGamedata, 15)
+```
+
+## ______________________________________________
+## Remove missing values in dataset
+```{r chunk-missingvalues,results="hide"}
+str(VideoGamedata)
+complete.cases(VideoGamedata)
+x <- VideoGamedata[complete.cases(VideoGamedata), ]
+str(x)
+```
+
+## ______________________________________________
+## User defined function using any of the variables from the data set
+```{r chunk-function,results="hide"}
+Total <- function(x,y) 
+{x+y}
+Total (VideoGamedata$Other_Sales,VideoGamedata$Global_Sales)
+```
+
+\newpage
+## ______________________________________________
+## Data manipulation techniques and filter rows based on any logical criteria that exist in dataset
+```{r}
+VideoGamedata %>% filter(Global_Sales > 30.00) 
+```
+
+## ______________________________________________
+## Dependent & independent variables and use reshaping techniques and create a new data frame by joining those variables from your dataset
+```{r}
+
+```
+
+## ______________________________________________
+## Remove missing values in dataset
+```{r chunk-missingvalue,results="hide"}
+##To check missing values in dataset
+VideoGameDataNew=is.na(VideoGamedata)
+##To remove Missing values from Dataset VideoGameDataNew
+na.omit(VideoGameDataNew)
+##result hidden due to number of rows
+```
+
+## ______________________________________________
+## Identify and remove duplicated data in dataset
+```{r chunk-duplicate,results="hide"}
+VideoGameDataDuplicate =VideoGamedata
+##VideoGameDataDuplicate[!duplicated(VideoGameDataDuplicate$Sepal.Width),]
+VideoGameDataDuplicate %>% distinct()
+##result hidden due to number of rows
+```
+
+## ______________________________________________
+## Reorder multiple rows in descending order
+```{r}
+
+```
+## ______________________________________________
+## Rename column names in dataset
+```{r}
+
+```
+## ______________________________________________
+## Add new variables in data frame by using a mathematical function
+```{r}
+VideoGamedata$NAAndEUSales = VideoGamedata$EU_Sales+VideoGamedata$NA_Sales
+head (VideoGamedata, 15)
+```
+
+\newpage
+## ______________________________________________
+## Create a training set using random number generator engine
+```{r cars}
+set.seed(1234)
+trainingdata = VideoGamedata %>% sample_frac(0.8,replace = FALSE)
+head (trainingdata, 15)
+```
+
+\newpage
+## ______________________________________________
+## Print Summary Statistics of dataset
+```{r}
+summary(VideoGamedata)
+```
+
+\newpage
+## ______________________________________________
+## Use numerical variables from the dataset and perform the statistical functions - mean
+```{r}
+VideoGamedata %>%
+  summarise(
+    count = n(),
+    mean_NorthAmericaSales = mean(VideoGamedata$NA_Sales, na.rm = TRUE),
+    mean_EuropeSales = mean(VideoGamedata$EU_Sales, na.rm = TRUE),
+    mean_JapanSales = mean(VideoGamedata$JP_Sales, na.rm = TRUE),
+    mean_OtherSales = mean(VideoGamedata$Other_Sales, na.rm = TRUE),
+    mean_GlobalSales = mean(VideoGamedata$Global_Sales, na.rm = TRUE)
+  )
+```
+
+\newpage
+## ______________________________________________
+## Use numerical variables from the dataset and perform the statistical functions - median
+```{r}
+VideoGamedata %>%
+  summarise(
+    count = n(),
+    median_NorthAmericaSales = median(VideoGamedata$NA_Sales, na.rm = TRUE),
+    median_EuropeSales = median(VideoGamedata$EU_Sales, na.rm = TRUE),
+    median_JapanSales = median(VideoGamedata$JP_Sales, na.rm = TRUE),
+    median_OtherSales = median(VideoGamedata$Other_Sales, na.rm = TRUE),
+    median_GlobalSales = median(VideoGamedata$Global_Sales, na.rm = TRUE)
+  )
+```
+
+\newpage
+## ______________________________________________
+## Use numerical variables from the dataset and perform the statistical functions - range
+```{r}
+VideoGamedata %>%
+  summarise(
+    count = n(),
+    mode_NorthAmericaSales = range(VideoGamedata$NA_Sales, na.rm = TRUE),
+    mode_EuropeSales = range(VideoGamedata$EU_Sales, na.rm = TRUE),
+    mode_JapanSales = range(VideoGamedata$JP_Sales, na.rm = TRUE),
+    mode_OtherSales = range(VideoGamedata$Other_Sales, na.rm = TRUE),
+    mode_GlobalSales = range(VideoGamedata$Global_Sales, na.rm = TRUE)
+  )
+```
+
+\newpage
+## ______________________________________________
+## Find the correlation between any 2 variables by applying least square linear regression model - correlation
+```{r}
+X = VideoGamedata[,"Global_Sales"]
+Y = VideoGamedata[,"NA_Sales"]
+CORRELATION = cor(Y,X,method = "pearson")
+CORRELATION
+```
+
+```{r}
+X = VideoGamedata[,"Global_Sales"]
+Y = VideoGamedata[,"EU_Sales"]
+CORRELATION = cor(Y,X,method = "pearson")
+CORRELATION
+```
+
+```{r}
+X = VideoGamedata[,"Global_Sales"]
+Y = VideoGamedata[,"JP_Sales"]
+CORRELATION = cor(Y,X,method = "pearson")
+CORRELATION
+```
+
+```{r}
+X = VideoGamedata[,"Global_Sales"]
+Y = VideoGamedata[,"Other_Sales"]
+CORRELATION = cor(Y,X,method = "pearson")
+CORRELATION
+```
+
+\newpage
+## ______________________________________________
+## Plot a scatter plot for any 2 variables in your dataset - graph in correlation - North America / Global Sales
+```{r}
+ggscatter(VideoGamedata, x = "Global_Sales", y = "NA_Sales",add = "reg.line", conf.int = TRUE,cor.coef = TRUE, cor.method = "pearson",xlab = "Global_Sales", ylab = "NA_Sales")
+```
+
+\newpage
+##  - Europe / Global Sales
+```{r}
+ggscatter(VideoGamedata, x = "Global_Sales", y = "EU_Sales",add = "reg.line", conf.int = TRUE,cor.coef = TRUE, cor.method = "pearson",xlab = "Global_Sales", ylab = "EU_Sales")
+```
+
+\newpage
+##  - Japan / Global Sales
+```{r}
+ggscatter(VideoGamedata, x = "Global_Sales", y = "JP_Sales",add = "reg.line", conf.int = TRUE,cor.coef = TRUE, cor.method = "pearson",xlab = "Global_Sales", ylab = "JP_Sales")
+```
+
+\newpage
+##  - Other Countries / Global Sales
+```{r}
+ggscatter(VideoGamedata, x = "Global_Sales", y = "Other_Sales",add = "reg.line", conf.int = TRUE,cor.coef = TRUE, cor.method = "pearson",xlab = "Global_Sales", ylab = "Other_Sales")
+```
+
+\newpage
+## ______________________________________________
+## graph - bar plot Global_Sales
+```{r test}
+ggplot(data = VideoGamedata,aes(x = Genre)) + geom_bar()
+```
+
+\newpage
+## ______________________________________________
+## Plot a bar plot for any 2 variables in your dataset - barplot Global_Sale with Genre
+```{r}
+ggplot(data = VideoGamedata,aes(x = VideoGamedata$Global_Sales,fill = factor(VideoGamedata$Genre))) + geom_bar()+ xlim(0, 20) + ylim(0, 50)
+```
+
+\newpage
+## ______________________________________________
+## Scatter plot - North America / Global Sales
+```{r}
+ggplot(data = VideoGamedata,aes(x = Global_Sales,y = NA_Sales,col = factor(Genre)))+ geom_point()
+```
+
+\newpage
+##  - Europe / Global Sales
+```{r}
+ggplot(data = VideoGamedata,aes(x = Global_Sales,y = EU_Sales,col = factor(Genre)))+ geom_point()
+```
+
+\newpage
+##  - Japan / Global Sales
+```{r}
+ggplot(data = VideoGamedata,aes(x = Global_Sales,y = JP_Sales,col = factor(Genre)))+ geom_point()
+```
+
+\newpage
+##  - Other Countries / Global Sales
+```{r}
+ggplot(data = VideoGamedata,aes(x = Global_Sales,y = Other_Sales,col = factor(Genre)))+ geom_point()
+```
+
+\newpage
+## ______________________________________________
+## Conclusion
+## Wii Sports game has the most sales overall, and specifically for North America and Europe.
+## Pokemon Red/Pokemon Blue has the most sales in Japan and Grand Theft Auto: San Andreas in Other countries.
+## PS2 Platform is leading overall video game sales.
+## Between the year of 2008 and 2010 video game sales are the highest while it dramatically dropped between 2017 and 2020.
+## Action genre has the most recorded sales around the world.
+
+
