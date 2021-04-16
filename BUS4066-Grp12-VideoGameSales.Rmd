@@ -6,6 +6,7 @@ header-includes:
 - \pagestyle{fancy}
 - \fancyhead[CO,CE]{Group12-AssignmentR}
 - \fancyfoot[CO,CE]{$https://github.com/conie-gbc/BUS4066-Analytics_Grp12$}
+- \setlength{\headheight}{25pt}
 ---
 
 ```{r setup, include=FALSE}
@@ -87,10 +88,33 @@ Total (VideoGamedata$Other_Sales,VideoGamedata$Global_Sales)
 VideoGamedata %>% filter(Global_Sales > 30.00) 
 ```
 
+\newpage
 ## ______________________________________________
 ## Dependent & independent variables and use reshaping techniques and create a new data frame by joining those variables from your dataset
 ```{r}
+##We want to predict North America Sales from Global Sales
+fit <-lm(NA_Sales ~ Global_Sales, data=VideoGamedata)
 
+##Values of coefficients(0s) are -0.0009505 and 0.4942274, 
+##-> Prediction equation for model is as below:
+##NA_Sales = -0.0009505 + 0.4942274*Global_Sales
+summary(fit)
+
+#Actual values of North America Sales of top 15 are as below
+head(VideoGamedata$NA_Sales,15)
+#Predicted values of North America Sales of top 15 are as below
+head(fitted(fit),15)
+
+##Use reshaping techniques cbind() 
+##to add the predicted North America Sales as last column
+predictedNA_Sales <-c(fitted(fit))
+NewVideoGamedata <-cbind(VideoGamedata, predictedNA_Sales)
+head(NewVideoGamedata,15)
+
+##list the variables in NewVideoGamedata
+names(NewVideoGamedata)
+##list the structure of NewVideoGamedata
+str(NewVideoGamedata)
 ```
 
 ## ______________________________________________
